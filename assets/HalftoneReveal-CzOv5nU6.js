@@ -48,8 +48,8 @@ void main() {
 
   float luminance = dot(source, vec3(0.2126, 0.7152, 0.0722));
   float ink = dotCoverage(st, luminance);
-  vec3 paper = vec3(0.73, 0.66, 0.52);
-  vec3 printColor = vec3(0.105, 0.075, 0.058);
+  vec3 paper = vec3(0.055, 0.075, 0.12);
+  vec3 printColor = vec3(0.008, 0.014, 0.03);
   vec3 printed = mix(paper, printColor, ink);
 
   vec2 delta = (vUv - uMouse) * pageAspect;
@@ -62,11 +62,14 @@ void main() {
   float edgeWarp = pow(clamp(distanceToMouse / radius, 0.0, 1.0), 4.0);
   vec2 offset = direction * edgeWarp * radius * 0.13 / pageAspect;
   vec2 chroma = direction * edgeWarp * 0.0035 / pageAspect;
-  vec3 sharp = vec3(
+  vec3 sharpSource = vec3(
     texture(tMap, clamp(coverUv(vUv - offset - chroma), 0.0, 1.0)).r,
     texture(tMap, clamp(coverUv(vUv - offset), 0.0, 1.0)).g,
     texture(tMap, clamp(coverUv(vUv - offset + chroma), 0.0, 1.0)).b
   );
+  float sharpLuma = dot(sharpSource, vec3(0.2126, 0.7152, 0.0722));
+  vec3 sharp = mix(vec3(0.018, 0.045, 0.095), vec3(0.92, 0.12, 0.19), smoothstep(0.18, 0.92, sharpLuma));
+  sharp += vec3(sharpSource.r * 0.1, sharpSource.g * 0.035, sharpSource.b * 0.12);
 
   float archiveGrain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453) - 0.5;
   vec3 color = mix(printed + archiveGrain * 0.025, sharp, reveal);

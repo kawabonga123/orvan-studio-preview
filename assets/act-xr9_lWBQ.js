@@ -1,1 +1,0 @@
-import{a as e,n as t,t as n}from"./jsx-runtime-n5LQ9ujS.js";import{t as r}from"./client-CB8it3IZ.js";import{t as i}from"./world-b-D1VH-NX-.js";var a=e(t(),1),o=r(),s=n();(0,o.createRoot)(document.getElementById(`act-root`)).render((0,s.jsx)(a.StrictMode,{children:(0,s.jsx)(i,{})}));
